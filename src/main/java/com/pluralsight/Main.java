@@ -1,17 +1,19 @@
 package com.pluralsight;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 public class Main {
     static Scanner myScanner = new Scanner(System.in);
     public static void main(String[] args) throws IOException {
         FileReader file = new FileReader("transactions.csv");
         BufferedReader buff = new BufferedReader(file);
-        FileWriter fileWriter = new FileWriter("transactions.csv");
+        FileWriter fileWriter = new FileWriter("transactions.csv" , true);
         BufferedWriter buffWriter = new BufferedWriter(fileWriter);
-        int count = 0;
+        System.out.println("Welcome to the Bank!\n");
         char command = ' ';
         while(command != 'X'){
-            System.out.println("Welcome to the Bank!\n");
             System.out.println("Enter the letter for the option you want.");
             System.out.println("D) Add Deposit\n" +
                     "\n" +
@@ -25,6 +27,9 @@ public class Main {
             myScanner.nextLine();
             switch(command){
                 case 'D': depositTransaction(buff , buffWriter);
+                case 'P': paymentTransaction(buff ,buffWriter);
+                case 'L': ledger(buff, buffWriter);
+
             }
         }
         System.out.println("Thank you for visiting the bank! Have a good day!");
@@ -34,13 +39,11 @@ public class Main {
 
     }
     public static void depositTransaction(BufferedReader buff , BufferedWriter buffWriter) throws IOException {
-        System.out.print("Enter the date:");
+        LocalDate date = LocalDate.now();
 
-        String date = myScanner.nextLine();
+        LocalTime times = LocalTime.now();
 
-        System.out.print("Enter the time:");
-
-        String time = myScanner.nextLine();
+        String time = times.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
         System.out.print("Enter the description:");
 
@@ -66,5 +69,44 @@ public class Main {
 
 
 
+    }
+    public static void paymentTransaction(BufferedReader buff , BufferedWriter buffWriter) throws IOException {
+        LocalDate date = LocalDate.now();
+
+        LocalTime times = LocalTime.now();
+
+        String time = times.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+        System.out.print("Enter the description:");
+
+        String description = myScanner.nextLine();
+
+        System.out.print("Enter the vendor name:");
+
+        String vendor = myScanner.nextLine();
+
+        System.out.print("Enter the amount you have to pay:");
+
+        double amount = myScanner.nextDouble();
+
+        while(amount > 0){
+            System.out.print("cannot pay positive amounts please try again");
+            System.out.println("Enter the amount you have to pay:");
+            amount = myScanner.nextDouble();
+        }
+
+        Transactions list = new Transactions(date , time ,description , vendor , amount);
+
+        buffWriter.write(list.getDate() + "|" + list.getTime() + "|" + list.getDescription() + "|" + list.getVendor() + "|" + list.getAmount() + "\n");
+
+
+
+    }
+    public static void ledger(BufferedReader buff, BufferedWriter buffWriter) throws IOException {
+        String input;
+        int num = 1;
+            while((input = buff.readLine()) != null) {
+                System.out.println(input);
+            }
     }
 }
