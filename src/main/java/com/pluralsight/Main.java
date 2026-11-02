@@ -17,10 +17,9 @@ public class Main {
                     "\n" +
                     "X) Exit\n");
             System.out.print("Enter option:");
-            command = myScanner.next().charAt(0);
-
-
+            command = myScanner.next().toUpperCase().charAt(0);
         }
+        System.out.println("Thank you for visiting the bank! Have a good day!");
 
 
 
