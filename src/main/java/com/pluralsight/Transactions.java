@@ -16,6 +16,20 @@ public class Transactions {
         this.vendor = vendor;
         this.amount = amount;
     }
+    public Transactions(String line) {
+        String[] parts = line.split("\\|");
+
+        this.date = LocalDate.parse(parts[0]);
+        this.time = parts[1];
+        this.description = parts[2];
+        this.vendor = parts[3];
+        this.amount = Double.parseDouble(parts[4]);
+    }
+    public String toString(){
+        return date + "|" + time + "|" + description + "|" + vendor + "|" + amount;
+
+    }
+
     public LocalDate getDate() {
         return date;
     }
