@@ -18,13 +18,17 @@ public class Transactions {
     }
     public Transactions(String line) {
         String[] parts = line.split("\\|");
-
+        if(parts.length != 5){
+            throw new IllegalArgumentException(
+                    "Invalid transaction record");
+        }
         this.date = LocalDate.parse(parts[0]);
         this.time = parts[1];
         this.description = parts[2];
         this.vendor = parts[3];
         this.amount = Double.parseDouble(parts[4]);
     }
+    @Override
     public String toString(){
         return date + "|" + time + "|" + description + "|" + vendor + "|" + amount;
 

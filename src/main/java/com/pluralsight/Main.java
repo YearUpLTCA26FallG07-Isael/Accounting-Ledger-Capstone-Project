@@ -20,27 +20,10 @@ public class Main {
 
         BufferedWriter buffWriter = new BufferedWriter(fileWriter);
 
-        System.out.println("Welcome to the Bank!\n");
-
         char command = ' ';
 
-        while(command != 'X'){
-
-            System.out.println("Enter the letter for the option you want.\n");
-
-            System.out.println("D) Add Deposit\n" +
-                    "\n" +
-                    "P) Make Payment\n" +
-                    "\n" +
-                    "L) Ledger\n" +
-                    "\n" +
-                    "X) Exit\n");
-
-            System.out.print("Enter option:");
-
-            command = myScanner.next().toUpperCase().charAt(0);
-
-            myScanner.nextLine();
+       do{
+           command = Console.displayHomeScreen();
 
             switch(command){
                 case 'D': depositTransaction(buff , buffWriter);
@@ -49,11 +32,13 @@ public class Main {
                 break;
                 case 'L': ledger(buff, buffWriter);
                 break;
+                case 'X': Console.showMessage("Thank you for visiting the bank! Have a good day!");
+                break;
+                default:
+                    Console.showMessage("Invalid option");
 
             }
-        }
-
-        System.out.println("Thank you for visiting the bank! Have a good day!");
+        }while(command != 'X');
 
         buffWriter.close();
 
@@ -76,166 +61,152 @@ public class Main {
     public static void depositTransaction(BufferedReader buff , BufferedWriter buffWriter) throws IOException {
         LocalDate date = LocalDate.now();
 
-        LocalTime times = LocalTime.now();
+        String time = LocalTime.now()
+                .format(DateTimeFormatter.ofPattern("hh:mm a"));
 
-        String time = times.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        String description = Console.getDescription();
+        String vendor = Console.getVendor();
+        double amount = Console.getDepositAmount();
 
-        System.out.print("Enter the description:");
+        Transactions transaction =
+                new Transactions(date, time, description, vendor, amount);
 
-        String description = myScanner.nextLine();
+        transactions.add(transaction);
 
-        System.out.print("Enter the vendor name:");
+        buffWriter.write(
+                date + "|" +
+                        time + "|" +
+                        description + "|" +
+                        vendor + "|" +
+                        amount
+        );
 
-        String vendor = myScanner.nextLine();
+        buffWriter.newLine();
+        buffWriter.flush();
 
-        System.out.print("Enter the amount you would like to deposit:");
-
-        double amount = myScanner.nextDouble();
-
-        while(amount < 0){
-            System.out.print("cannot deposit negative amounts pls try again");
-            System.out.println("Enter the amount you would like to deposit:");
-            amount = myScanner.nextDouble();
-        }
-
-        transactions.add(new Transactions(date , time , description , vendor , amount));
-
-        buffWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount + "\n");
-
+        Console.showMessage("Deposit added successfully.");
+        Console.pressEnterToContinue();
     }
     public static void paymentTransaction(BufferedReader buff , BufferedWriter buffWriter) throws IOException {
         LocalDate date = LocalDate.now();
 
-        LocalTime times = LocalTime.now();
+        String time = LocalTime.now()
+                .format(DateTimeFormatter.ofPattern("hh:mm a"));
 
-        String time = times.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        String description = Console.getDescription();
+        String vendor = Console.getVendor();
+        double amount = Console.getPaymentAmount();
 
-        System.out.print("Enter the description:");
-
-        String description = myScanner.nextLine();
-
-        System.out.print("Enter the vendor name:");
-
-        String vendor = myScanner.nextLine();
-
-        System.out.print("Enter the amount you have to pay:");
-
-        double amount = myScanner.nextDouble();
-
-        while(amount > 0){
-            System.out.println("cannot pay positive amounts please try again");
-            System.out.print("Enter the amount you have to pay:");
-            amount = myScanner.nextDouble();
+        while (amount >= 0) {
+            System.out.println("Payment amount must be negative.");
+            amount = Console.getPaymentAmount();
         }
 
-        transactions.add(new Transactions(date , time , description , vendor , amount));
+        Transactions transaction =
+                new Transactions(date, time, description, vendor, amount);
 
-        buffWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount + "\n");
+        transactions.add(transaction);
 
+        buffWriter.write(
+                date + "|" +
+                        time + "|" +
+                        description + "|" +
+                        vendor + "|" +
+                        amount
+        );
 
+        buffWriter.newLine();
+        buffWriter.flush();
 
-
-
-
-
+        System.out.println("Payment recorded successfully.");
+        Console.pressEnterToContinue();
     }
     public static void ledger(BufferedReader buff, BufferedWriter buffWriter) throws IOException {
-        System.out.println("Welcome to the Ledger menu! \n");
-        char command = ' ';
-        while(command != 'H'){
-            System.out.println("What would you like to view?\n");
-            System.out.println("A) View all\n" +
-            "\n" +
-                    "D) View Deposits\n" +
-                    "\n" +
-                    "P) View Payments\n" +
-                    "\n" +
-                    "R) View Report Screen\n" +
-                    "\n" +
-                    "H) Go back to Home page\n");
-            System.out.print("Enter option:");
-            command = myScanner.next().toUpperCase().charAt(0);
-            myScanner.nextLine();
-            switch(command){
-                case 'A': for (int i = transactions.size() - 1; i >= 0; i--) {
-                    System.out.println(transactions.get(i));
-                };
-                break;
-                case 'D':for (int i = transactions.size() - 1; i >= 0; i--) {
-                    if (transactions.get(i).getAmount() > 0) {
+        char command;
+        do {
+            command = Console.displayLedgerMenu();
+            switch (command) {
+
+                case 'A':
+                    for (int i = transactions.size() - 1; i >= 0; i--) {
                         System.out.println(transactions.get(i));
                     }
-                }
-                break;
-                case 'P':for (int i = transactions.size() - 1; i >= 0; i--) {
-                    if (transactions.get(i).getAmount() < 0) {
-                        System.out.println(transactions.get(i));
+                    break;
+
+                case 'D':
+                    for (int i = transactions.size() - 1; i >= 0; i--) {
+
+                        if (transactions.get(i).getAmount() > 0) {
+                            System.out.println(transactions.get(i));
+                        }
+
                     }
-                }
-                break;
-                case 'R':reportScreen();
-                break;
+                    break;
 
-                case 'H': System.out.println("Returning...\n" + "\n");
-                break;
+                case 'P':
+                    for (int i = transactions.size() - 1; i >= 0; i--) {
 
-                default:System.out.println("Invalid input please try again\n");
-                break;
+                        if (transactions.get(i).getAmount() < 0) {
+                            System.out.println(transactions.get(i));
+                        }
 
+                    }
+                    Console.pressEnterToContinue();
+                    break;
+
+                case 'R':
+                    reportScreen();
+                    break;
+
+                case 'H':
+                    System.out.println("Returning to home screen...");
+                    break;
+
+                default:
+                    System.out.println("Invalid option. Please try again.");
             }
-
-        }
+        } while (command != 'H');
 
 
     }
     public static void reportScreen(){
-        System.out.println("Welcome to the report menu! \n");
-        int command = 1;
-        while(command != 0){
-            System.out.println("What would you like to view?\n");
-            System.out.println("1) Month to date\n" +
-                    "\n" +
-                    "2) Previous Month\n" +
-                    "\n" +
-                    "3) Year to date\n" +
-                    "\n" +
-                    "4) Previous Year\n" +
-                    "\n" +
-                    "5) Search by Vendor\n" +
-                    "\n" +
-                    "0) Back\n");
-            System.out.print("Enter option:");
-            command = myScanner.nextInt();
-            myScanner.nextLine();
-            switch(command){
+        int command;
 
-                case 0:System.out.println("Returning...\n" + "\n");
-                break;
+        do {
 
-                case 1: monthToDate(transactions);
-                break;
+            command = Console.displayReportMenu();
 
-                case 2: previousMonth(transactions);
-                break;
+            switch (command) {
 
-                case 3: yearToDate(transactions);
-                break;
+                case 1:
+                    monthToDate(transactions);
+                    break;
 
-                case 4: previousYear(transactions);
-                break;
+                case 2:
+                    previousMonth(transactions);
+                    break;
 
-                case 5: searchByVendor(transactions , myScanner);
-                break;
+                case 3:
+                    yearToDate(transactions);
+                    break;
 
-                default:System.out.println("Invalid input");
-                break;
+                case 4:
+                    previousYear(transactions);
+                    break;
 
+                case 5:
+                    String vendor = Console.getVendorSearch();
+                    searchByVendor(transactions, vendor);
+                    break;
 
+                case 0:
+                    System.out.println("Returning...");
+                    break;
+
+                default:
+                    System.out.println("Invalid option. Please try again.");
             }
-
-        }
-
-
+        } while (command != 0);
     }
     public static void monthToDate(List<Transactions> transactions) {
         LocalDate today = LocalDate.now();
@@ -247,7 +218,8 @@ public class Main {
                 .sorted(Comparator.comparing(Transactions::getDate)
                         .thenComparing(Transactions::getTime)
                         .reversed())
-                .forEach(System.out::println);
+                .forEach(t -> Console.showMessage(t.toString()));
+        Console.pressEnterToContinue();
     }
     public static void previousMonth(List<Transactions> transactions) {
         LocalDate today = LocalDate.now();
@@ -265,7 +237,8 @@ public class Main {
                 .sorted(Comparator.comparing(Transactions::getDate)
                         .thenComparing(Transactions::getTime)
                         .reversed())
-                .forEach(System.out::println);
+                .forEach(t -> Console.showMessage(t.toString()));
+        Console.pressEnterToContinue();
     }
     public static void yearToDate(List<Transactions> transactions) {
         LocalDate today = LocalDate.now();
@@ -277,7 +250,8 @@ public class Main {
                 .sorted(Comparator.comparing(Transactions::getDate)
                         .thenComparing(Transactions::getTime)
                         .reversed())
-                .forEach(System.out::println);
+                .forEach(t -> Console.showMessage(t.toString()));
+        Console.pressEnterToContinue();
     }
     public static void previousYear(List<Transactions> transactions) {
         int previousYear = LocalDate.now().getYear() - 1;
@@ -287,20 +261,19 @@ public class Main {
                 .sorted(Comparator.comparing(Transactions::getDate)
                         .thenComparing(Transactions::getTime)
                         .reversed())
-                .forEach(System.out::println);
+                .forEach(t -> Console.showMessage(t.toString()));
+        Console.pressEnterToContinue();
     }
-    public static void searchByVendor(List<Transactions> transactions, Scanner scanner) {
-
-        System.out.print("Enter vendor name: ");
-        String vendor = scanner.nextLine().toLowerCase();
+    public static void searchByVendor(List<Transactions> transactions, String vendor) {
 
         transactions.stream()
                 .filter(t -> t.getVendor()
                         .toLowerCase()
-                        .contains(vendor))
+                        .contains(vendor.toLowerCase()))
                 .sorted(Comparator.comparing(Transactions::getDate)
                         .thenComparing(Transactions::getTime)
                         .reversed())
-                .forEach(System.out::println);
+                .forEach(t -> Console.showMessage(t.toString()));
+        Console.pressEnterToContinue();
     }
  }
