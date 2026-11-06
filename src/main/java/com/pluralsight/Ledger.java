@@ -87,11 +87,11 @@ public class Ledger {
                     break;
 
                 case 'H':
-                    System.out.println("Returning to home screen...");
+                    Console.showMessage("Returning to home screen...");
                     break;
 
                 default:
-                    System.out.println("Invalid option. Please try again.");
+                    Console.showMessage("Invalid option. Please try again.");
             }
 
 

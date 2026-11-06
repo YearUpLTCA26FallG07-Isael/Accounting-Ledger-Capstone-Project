@@ -38,11 +38,11 @@ public class Reports {
                     break;
 
                 case 0:
-                    System.out.println("Returning...");
+                    Console.showMessage("Returning...");
                     break;
 
                 default:
-                    System.out.println("Invalid option. Please try again.");
+                    Console.showMessage("Invalid option. Please try again.");
             }
         } while (command != 0);
     }

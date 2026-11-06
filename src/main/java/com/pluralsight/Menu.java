@@ -15,7 +15,7 @@ public class Menu {
         try {
             file = new FileReader("transactions.csv");
         } catch (FileNotFoundException e) {
-            System.out.println("File not found");
+            Console.showMessage("File not found");
         }
 
 
@@ -28,7 +28,7 @@ public class Menu {
         try {
             fileWriter = new FileWriter("transactions.csv" , true);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Console.showMessage("Error loading file");
         }
 
         BufferedWriter buffWriter = new BufferedWriter(fileWriter);
@@ -117,7 +117,7 @@ public class Menu {
         double amount = Console.getPaymentAmount();
 
         while (amount >= 0) {
-            System.out.println("Payment amount must be negative.");
+            Console.showMessage("Payment amount must be negative.");
             amount = Console.getPaymentAmount();
         }
 
@@ -130,9 +130,9 @@ public class Menu {
             buffWriter.newLine();
             buffWriter.flush();
 
-            System.out.println("Payment recorded successfully.");
+            Console.showMessage("Payment recorded successfully.");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Console.showMessage("Error saving payment transaction.");
         }
 
         Console.pressEnterToContinue();
