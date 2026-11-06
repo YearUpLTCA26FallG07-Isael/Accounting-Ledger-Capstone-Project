@@ -16,6 +16,7 @@ public class Transactions {
         this.vendor = vendor;
         this.amount = amount;
     }
+
     public Transactions(String line) {
         String[] parts = line.split("\\|");
         if(parts.length != 5){
@@ -28,7 +29,11 @@ public class Transactions {
         this.vendor = parts[3];
         this.amount = Double.parseDouble(parts[4]);
     }
-    @Override
+
+    public Transactions() {
+
+    }
+
     public String toString(){
         return date + "|" + time + "|" + description + "|" + vendor + "|" + amount;
 

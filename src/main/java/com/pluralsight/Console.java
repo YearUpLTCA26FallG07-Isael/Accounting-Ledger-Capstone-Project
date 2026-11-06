@@ -8,15 +8,17 @@ public class Console {
 
     public static char displayHomeScreen() {
         System.out.println("""
-                ========================================
-                        BANK ACCOUNT LEDGER
-                ========================================
-                [D] Add Deposit
-                [P] Make Payment
-                [L] View Ledger
-                [X] Exit
-                ========================================
-                """);
+==================================================
+                BANK ACCOUNT LEDGER
+==================================================
+
+    [D] Add Deposit
+    [P] Make Payment
+    [L] View Ledger
+    [X] Exit
+
+==================================================
+""");
 
         System.out.print("Select an option: ");
         return scanner.nextLine().toUpperCase().charAt(0);
@@ -25,7 +27,7 @@ public class Console {
     public static char displayLedgerMenu() {
         System.out.println("""
 ==================================================
-                    LEDGER MENU
+                  LEDGER MENU
 ==================================================
 
     [A] All Transactions
@@ -44,7 +46,7 @@ public class Console {
     public static int displayReportMenu() {
         System.out.println("""
 ==================================================
-                    REPORTS
+                   REPORTS
 ==================================================
 
     [1] Month To Date
@@ -119,4 +121,32 @@ public class Console {
         scanner.nextLine();
     }
 
+    public static void transactionsMenu(){
+        System.out.println("""
+==================================================
+                  TRANSACTIONS
+==================================================
+""");
+    }
+
+    public static void transcationsClose(){
+        System.out.println("""
+==================================================""");
+    }
+
+    public static void depositMenu(){
+        System.out.println("""
+==================================================
+                   DEPOSITS
+==================================================
+""");
+    }
+
+    public static void paymentMenu(){
+        System.out.println("""
+==================================================
+                   PAYMENTS
+==================================================
+""");
+    }
 }
