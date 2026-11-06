@@ -8,10 +8,15 @@ import java.util.ArrayList;
 
 public class Menu {
     public static ArrayList<Transactions> transactions = new ArrayList<>();
-    public static void menuMethod() throws IOException {
+    public static void menuMethod() {
 
 
-            FileReader file = new FileReader("transactions.csv");
+        FileReader file = null;
+        try {
+            file = new FileReader("transactions.csv");
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        }
 
 
         BufferedReader buff = new BufferedReader(file);
@@ -34,26 +39,34 @@ public class Menu {
             command = Console.displayHomeScreen();
 
             switch (command) {
-                case 'D':
-                    depositTransaction(buffWriter);
-                    break;
-                case 'P':
-                    paymentTransaction(buffWriter);
-                    break;
-                case 'L':
-                    Ledger.ledger(buff, buffWriter);
-                    break;
-                case 'X':
-                    displayExitScreen();
-                    break;
-                default:
-                    Console.showMessage("Invalid option");
+
+                case 'D': depositTransaction(buffWriter);
+                break;
+
+                case 'P': paymentTransaction(buffWriter);
+                break;
+
+                case 'L': Ledger.ledger(buff, buffWriter);
+                break;
+
+                case 'X': displayExitScreen();
+                break;
+
+                default: Console.showMessage("Invalid option");
 
             }
         }
-        buffWriter.close();
+        try {
+            buffWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        buff.close();
+        try {
+            buff.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
 
     }
@@ -69,7 +82,7 @@ public class Menu {
             throw new RuntimeException(e);
         }
     }
-    public static void depositTransaction(BufferedWriter buffWriter) throws IOException {
+    public static void depositTransaction(BufferedWriter buffWriter) {
         LocalDate date = LocalDate.now();
 
         String time = LocalTime.now()
@@ -83,16 +96,17 @@ public class Menu {
 
         transactions.add(transaction);
 
-        buffWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount
-        );
-
-        buffWriter.newLine();
-        buffWriter.flush();
-
-        Console.showMessage("Deposit added successfully.");
-        Console.pressEnterToContinue();
+        try {
+            buffWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount);
+            buffWriter.newLine();
+            buffWriter.flush();
+            Console.showMessage("Deposit added successfully.");
+        } catch (IOException e) {
+            Console.showMessage("Error saving deposit transaction.");
+        }
+         Console.pressEnterToContinue();
     }
-    public static void paymentTransaction(BufferedWriter buffWriter) throws IOException {
+    public static void paymentTransaction(BufferedWriter buffWriter) {
         LocalDate date = LocalDate.now();
 
         String time = LocalTime.now()
@@ -111,12 +125,16 @@ public class Menu {
 
         transactions.add(transaction);
 
-        buffWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount);
+        try {
+            buffWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount);
+            buffWriter.newLine();
+            buffWriter.flush();
 
-        buffWriter.newLine();
-        buffWriter.flush();
+            System.out.println("Payment recorded successfully.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        System.out.println("Payment recorded successfully.");
         Console.pressEnterToContinue();
     }
     public static void displayExitScreen() {

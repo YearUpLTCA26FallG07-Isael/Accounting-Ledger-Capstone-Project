@@ -8,7 +8,7 @@ import java.io.IOException;
 import static com.pluralsight.Menu.transactions;
 
 public class Ledger {
-    public static void ledger(BufferedReader buff, BufferedWriter buffWriter) throws IOException {
+    public static void ledger(BufferedReader buff, BufferedWriter buffWriter) {
         char command = ' ';
         while(command != 'H'){
             command = Console.displayLedgerMenu();
